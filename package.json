@@ -1,0 +1,21 @@
+{
+  "name": "frp.js",
+  "version": "0.1.2",
+  "description": "Functional reactive programming primitives",
+  "author": "Robin Allen <r@foon.uk>",
+  "license": "ISC",
+  "main": "src",
+  "keywords": ["frp", "functional", "reactive", "cell", "event", "signal", "slot", "map", "reduce"],
+  "homepage": "https://github.com/robin-allen/frp.js",
+  "bugs": "https://github.com/robin-allen/frp.js/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robin-allen/frp.js.git"
+  },
+  "scripts": {
+    "test": "mocha --ui tdd"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1"
+  }
+}
