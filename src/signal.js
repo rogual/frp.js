@@ -37,7 +37,8 @@ Signal.event = function() {
   }, Signal.methods);
 
   Object.defineProperties(r, {
-    empty: { get: function() { return empty; }}
+    empty: { get: function() { return empty; }},
+    value: { get: function() { return value; }}
   });
 
   return r;
@@ -52,11 +53,20 @@ Signal.cell = function(initial) {
   else
     sig = Signal.event(ctrl.event);
 
-  return _.assign({}, sig, Signal.methods, {
+  var r = _.assign({}, sig, Signal.methods, {
     set: ctrl.fire,
     signal: sig,
     event: sig.event
   });
+
+  Object.defineProperties(r, {
+    value: {
+      get: function() { return sig.value; },
+      set: function(value) { ctrl.fire(value); }
+    }
+  });
+
+  return r;
 };
 
 
