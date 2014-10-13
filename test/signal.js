@@ -100,4 +100,24 @@ suite('signal', function() {
     assert.equal(evens.get(), 4);
   });
 
+  test('unique', function() {
+    var cell = Signal.cell();
+    var u = cell.unique();
+
+    var r = [];
+    u.bind(r.push.bind(r));
+
+    var s = [];
+    cell.bind(s.push.bind(s));
+
+    assert.deepEqual(r, []);
+    cell.set(1);
+    assert.deepEqual(r, [1]);
+    cell.set(1);
+    assert.deepEqual(r, [1]);
+    cell.set(2);
+    assert.deepEqual(r, [1, 2]);
+    assert.deepEqual(s, [1, 1, 2]);
+  });
+
 });

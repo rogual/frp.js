@@ -142,4 +142,24 @@ suite('event', function() {
 
   });
 
+  test('unique', function() {
+    var ctrl = Pipe();
+    var u = ctrl.unique();
+
+    var r = [];
+    u.bind(r.push.bind(r));
+
+    var s = [];
+    ctrl.bind(s.push.bind(s));
+
+    assert.deepEqual(r, []);
+    ctrl.fire(1);
+    assert.deepEqual(r, [1]);
+    ctrl.fire(1);
+    assert.deepEqual(r, [1]);
+    ctrl.fire(2);
+    assert.deepEqual(r, [1, 2]);
+    assert.deepEqual(s, [1, 1, 2]);
+  });
+
 });

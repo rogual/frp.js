@@ -126,3 +126,25 @@ def('filter', function(sig, fn) {
   });
   return cell.signal;
 });
+
+def('debounce', function(sig, msec) {
+  var cell = Signal.cell();
+  sig.bind(_.debounce(cell.set, msec));
+  return cell.signal;
+});
+
+def('unique', function(sig, eq) {
+  var cell = Signal.cell();
+  eq = eq || function(a, b) { return a === b; };
+
+  var last = [];
+
+  sig.bind(function(value) {
+    if (last.length === 0 || !eq(last[0], value)) {
+      last[0] = value;
+      cell.set(value);
+    }
+  });
+
+  return cell.signal;
+});
