@@ -49,34 +49,11 @@ function def(name, impl) {
   };
 }
 
-def('map', function(event, fn) {
+def('transform', function(event, xform) {
   var pipe = Pipe();
-  fn = _.createCallback(fn);
 
-  event.watch(function(value) {
-    pipe.fire(fn(value));
-  });
-  return pipe.event;
-});
+  xform(pipe.fire);
 
-def('filter', function(event, fn) {
-  var pipe = Pipe();
-  fn = _.createCallback(fn);
-
-  event.watch(function(value) {
-    if (fn(value))
-      pipe.fire(value);
-  });
-  return pipe.event;
-});
-
-def('reduce', function(event, initial, fn) {
-  var pipe = Pipe();
-  var value = initial;
-  event.watch(function(newValue) {
-    value = fn(value, newValue);
-    pipe.fire(value);
-  });
   return pipe.event;
 });
 
@@ -90,24 +67,4 @@ def('flatMap', function(event, fn) {
   return pipe.event;
 });
 
-def('debounce', function(event, msec) {
-  var pipe = Pipe();
-  event.watch(_.debounce(pipe.fire, msec));
-  return pipe.event;
-});
-
-def('unique', function(event, eq) {
-  var pipe = Pipe();
-  eq = eq || function(a, b) { return a === b; };
-
-  var last = [];
-
-  event.bind(function(value) {
-    if (last.length === 0 || !eq(last[0], value)) {
-      last[0] = value;
-      pipe.fire(value);
-    }
-  });
-
-  return pipe.event;
-});
+require('./common').init(def);

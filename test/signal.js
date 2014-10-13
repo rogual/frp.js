@@ -69,7 +69,7 @@ suite('signal', function() {
     var ctrl = Pipe();
     var sig = Signal.event(1000, ctrl.event);
 
-    var out = sig.reduce(function(a, b) { return a + b; });
+    var out = sig.reduce(0, function(a, b) { return a + b; });
 
     assert.equal(out.get(), 1000);
 

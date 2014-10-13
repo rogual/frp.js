@@ -98,53 +98,12 @@ function def(name, impl) {
   };
 }
 
-def('map', function(sig, fn) {
-  fn = _.createCallback(fn);
-  return Signal.event(
-    fn(sig.get()),
-    Event.map(sig, fn)
-  );
-});
-
-def('reduce', function(sig, fn) {
-  var initial = sig.get();
-  fn = _.createCallback(fn);
-
-  return Signal.event(
-    initial,
-    Event.reduce(sig, initial, fn)
-  );
-});
-
-def('filter', function(sig, fn) {
+def('transform', function(event, xform) {
   var cell = Signal.cell();
-  fn = _.createCallback(fn);
 
-  sig.bind(function(value) {
-    if (fn(value))
-      cell.set(value);
-  });
+  xform(cell.set);
+
   return cell.signal;
 });
 
-def('debounce', function(sig, msec) {
-  var cell = Signal.cell();
-  sig.bind(_.debounce(cell.set, msec));
-  return cell.signal;
-});
-
-def('unique', function(sig, eq) {
-  var cell = Signal.cell();
-  eq = eq || function(a, b) { return a === b; };
-
-  var last = [];
-
-  sig.bind(function(value) {
-    if (last.length === 0 || !eq(last[0], value)) {
-      last[0] = value;
-      cell.set(value);
-    }
-  });
-
-  return cell.signal;
-});
+require('./common').init(def);
