@@ -70,6 +70,24 @@ suite('event', function() {
     assert.deepEqual(r, [2]);
     ctrl.fire(4);
     assert.deepEqual(r, [2, 4]);
+
+    r = [];
+    var truthy = event.filter();
+    truthy.watch(r.push.bind(r));
+
+    ctrl.fire(3);
+    assert.deepEqual(r, [3]);
+    ctrl.fire(0);
+    assert.deepEqual(r, [3]);
+
+    r = [];
+    var good = event.filter({alignment: 'good'});
+    good.watch(r.push.bind(r));
+
+    ctrl.fire({name: 'Jenny', alignment: 'evil'});
+    ctrl.fire({name: 'Bruce', alignment: 'good'});
+    ctrl.fire({name: 'Boz', alignment: 'wonky'});
+    assert.deepEqual(r, [{name: 'Bruce', alignment: 'good'}]);
   });
 
   test('reduce', function() {

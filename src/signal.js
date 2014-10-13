@@ -60,7 +60,7 @@ var Cell = Signal.cell = function(initial) {
   });
 
   r.update = function(fn) {
-    r.value = fn(r.value);
+    r.value = _.createCallback(fn)(r.value);
   };
 
   Object.defineProperties(r, {
@@ -99,6 +99,7 @@ function def(name, impl) {
 }
 
 def('map', function(sig, fn) {
+  fn = _.createCallback(fn);
   return Signal.event(
     fn(sig.get()),
     Event.map(sig, fn)
@@ -107,6 +108,7 @@ def('map', function(sig, fn) {
 
 def('reduce', function(sig, fn) {
   var initial = sig.get();
+  fn = _.createCallback(fn);
 
   return Signal.event(
     initial,
@@ -116,6 +118,8 @@ def('reduce', function(sig, fn) {
 
 def('filter', function(sig, fn) {
   var cell = Signal.cell();
+  fn = _.createCallback(fn);
+
   sig.bind(function(value) {
     if (fn(value))
       cell.set(value);

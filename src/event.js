@@ -51,6 +51,8 @@ function def(name, impl) {
 
 def('map', function(event, fn) {
   var pipe = Pipe();
+  fn = _.createCallback(fn);
+
   event.watch(function(value) {
     pipe.fire(fn(value));
   });
@@ -59,7 +61,8 @@ def('map', function(event, fn) {
 
 def('filter', function(event, fn) {
   var pipe = Pipe();
-  fn = fn || _.identity;
+  fn = _.createCallback(fn);
+
   event.watch(function(value) {
     if (fn(value))
       pipe.fire(value);
@@ -79,6 +82,8 @@ def('reduce', function(event, initial, fn) {
 
 def('flatMap', function(event, fn) {
   var pipe = Pipe();
+  fn = _.createCallback(fn);
+
   event.watch(function(value) {
     fn(value).watch(pipe.fire);
   });
