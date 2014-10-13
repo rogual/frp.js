@@ -5,8 +5,13 @@ About
     This is a library providing functional reactive programming
     (FRP) primitives.
 
-    Where possible, functions are provided both as module-level
+    Where appropriate, functions are provided both as module-level
     functions and as methods on the FRP objects themselves.
+
+
+Installation
+
+    npm install frp
 
 
 Concepts
