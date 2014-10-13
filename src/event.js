@@ -10,13 +10,16 @@ var Pipe = Event.pipe = function() {
 
   var event = Event(watchers.push.bind(watchers));
 
+  var watch = watchers.push.bind(watchers);
+
   return _.assign({}, event, {
     fire: function(value) {
       watchers.forEach(function(watcher) {
         watcher(value);
       });
     },
-    watch: watchers.push.bind(watchers),
+    watch: watch,
+    bind: watch,
     event: event
   });
 };
