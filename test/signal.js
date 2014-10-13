@@ -2,6 +2,7 @@ var assert = require('assert');
 var Event = require('../src/event');
 var Signal = require('../src/signal');
 var Pipe = require('../src/pipe');
+var Cell = require('../src/cell');
 
 suite('signal', function() {
 
@@ -21,7 +22,7 @@ suite('signal', function() {
   });
 
   test('watch', function() {
-    var cell = Signal.cell();
+    var cell = Signal.cell(27);
     var sig = cell.signal;
     var values = [];
     sig.watch(values.push.bind(values));
@@ -35,6 +36,20 @@ suite('signal', function() {
     var values = [];
     sig.bind(values.push.bind(values));
     assert.deepEqual(values, [42]);
+  });
+
+  test('combine', function() {
+    var a = Cell(1);
+    var b = Cell();
+    var ab = Signal.combine({a: a, b: b});
+
+    assert.deepEqual(ab.value, {a: 1});
+    a.value = 62;
+    assert.deepEqual(ab.value, {a: 62});
+    b.value = 'blah';
+    assert.deepEqual(ab.value, {a: 62, b: 'blah'});
+    a.value = null;
+    assert.deepEqual(ab.value, {a: null, b: 'blah'});
   });
 
   test('map', function() {

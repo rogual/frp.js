@@ -44,7 +44,7 @@ Signal.event = function() {
   return r;
 };
 
-Signal.cell = function(initial) {
+var Cell = Signal.cell = function(initial) {
   var ctrl = Event.pipe();
   var sig;
 
@@ -56,8 +56,12 @@ Signal.cell = function(initial) {
   var r = _.assign({}, sig, Signal.methods, {
     set: ctrl.fire,
     signal: sig,
-    event: sig.event
+    event: sig.event,
   });
+
+  r.update = function(fn) {
+    r.value = fn(r.value);
+  };
 
   Object.defineProperties(r, {
     value: {
@@ -69,9 +73,20 @@ Signal.cell = function(initial) {
   return r;
 };
 
-
 Signal.constant = function(value) {
   return Signal.event(value, Event.identity);
+};
+
+Signal.combine = function(signals) {
+  var cell = Cell({});
+  _.forEach(signals, function(signal, name) {
+    signal.bind(function(value) {
+      cell.update(function(values) {
+        return _.assign({}, values, _.object([[name, value]]));
+      });
+    });
+  });
+  return cell.signal;
 };
 
 Signal.methods = {};
@@ -107,4 +122,3 @@ def('filter', function(sig, fn) {
   });
   return cell.signal;
 });
-
