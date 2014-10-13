@@ -64,4 +64,25 @@ suite('signal', function() {
 
     assert.equal(out.get(), 1537);
   });
+
+  test('filter', function() {
+    var cell = Signal.cell(47);
+    var sig = cell.signal;
+
+    var evens = sig.filter(function(x) { return x % 2 === 0; });
+
+    assert.equal(evens.empty, true);
+    cell.set(1);
+    assert.equal(evens.empty, true);
+    cell.set(2);
+    assert.equal(evens.empty, false);
+    assert.equal(evens.get(), 2);
+    cell.set(3);
+    assert.equal(evens.empty, false);
+    assert.equal(evens.get(), 2);
+    cell.set(4);
+    assert.equal(evens.empty, false);
+    assert.equal(evens.get(), 4);
+  });
+
 });
