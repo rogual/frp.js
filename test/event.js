@@ -52,6 +52,26 @@ suite('event', function() {
 
   });
 
+  test('filter', function() {
+    var ctrl = Pipe();
+    var event = ctrl.event;
+
+    var evens = event.filter(function(x) { return x % 2 === 0; });
+
+    var r = [];
+    evens.watch(r.push.bind(r));
+
+    assert.deepEqual(r, []);
+    ctrl.fire(1);
+    assert.deepEqual(r, []);
+    ctrl.fire(2);
+    assert.deepEqual(r, [2]);
+    ctrl.fire(3);
+    assert.deepEqual(r, [2]);
+    ctrl.fire(4);
+    assert.deepEqual(r, [2, 4]);
+  });
+
   test('reduce', function() {
     var ctrl = Pipe();
     var event = ctrl.event;
@@ -77,6 +97,31 @@ suite('event', function() {
 
       assert.deepEqual(values, [1500, 1530, 1537]);
     });
+  });
+
+  test('flatMap', function() {
+    var ctrl = Pipe();
+
+    var a = Pipe(), b = Pipe();
+    var things = {a: a, b: b};
+
+    var r = [];
+    ctrl.flatMap(function(name) {
+      return things[name].event;
+    }).watch(r.push.bind(r));
+
+    assert.deepEqual(r, []);
+    ctrl.fire('a');
+    assert.deepEqual(r, []);
+    a.fire(1);
+    assert.deepEqual(r, [1]);
+    ctrl.fire('b');
+    assert.deepEqual(r, [1]);
+    b.fire(2);
+    assert.deepEqual(r, [1, 2]);
+    a.fire(3);
+    assert.deepEqual(r, [1, 2, 3]);
+
   });
 
 });
