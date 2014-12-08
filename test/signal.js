@@ -6,6 +6,15 @@ var Cell = require('../src/cell');
 
 suite('signal', function() {
 
+  test('empty', function() {
+    assert(Cell().empty);
+    assert(!Cell({}).empty);
+    assert(!Cell(null).empty);
+    assert(!Cell(undefined).empty);
+    assert(!Cell(0).empty);
+    assert(!Cell('').empty);
+  });
+
   test('constant', function() {
     var sig = Signal.constant(42);
     assert.equal(sig.get(), 42);
@@ -38,7 +47,7 @@ suite('signal', function() {
     assert.deepEqual(values, [42]);
   });
 
-  test('combine', function() {
+  test('combine-object', function() {
     var a = Cell(1);
     var b = Cell();
     var ab = Signal.combine({a: a, b: b});
@@ -50,6 +59,48 @@ suite('signal', function() {
     assert.deepEqual(ab.value, {a: 62, b: 'blah'});
     a.value = null;
     assert.deepEqual(ab.value, {a: null, b: 'blah'});
+  });
+
+  test('combine-array', function() {
+    var a = Cell(1);
+    var b = Cell();
+    var ab = Signal.combine([a, b]);
+
+    assert.deepEqual(ab.value, [1]);
+    a.value = 62;
+    assert.deepEqual(ab.value, [62]);
+    b.value = 'blah';
+    assert.deepEqual(ab.value, [62, 'blah']);
+    a.value = null;
+    assert.deepEqual(ab.value, [null, 'blah']);
+  });
+
+  test('join-object', function() {
+    var a = Cell(1);
+    var b = Cell();
+    var ab = Signal.join({a: a, b: b});
+
+    assert(ab.empty);
+    a.value = 62;
+    assert(ab.empty);
+    b.value = 'blah';
+    assert.deepEqual(ab.value, {a: 62, b: 'blah'});
+    a.value = null;
+    assert.deepEqual(ab.value, {a: null, b: 'blah'});
+  });
+
+  test('join-array', function() {
+    var a = Cell(1);
+    var b = Cell();
+    var ab = Signal.join([a, b]);
+
+    assert(ab.empty);
+    a.value = 62;
+    assert(ab.empty);
+    b.value = 'blah';
+    assert.deepEqual(ab.value, [62, 'blah']);
+    a.value = null;
+    assert.deepEqual(ab.value, [null, 'blah']);
   });
 
   test('map', function() {

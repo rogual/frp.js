@@ -67,6 +67,9 @@ var Cell = Signal.cell = function(initial) {
     value: {
       get: function() { return sig.value; },
       set: function(value) { ctrl.fire(value); }
+    },
+    empty: {
+      get: function() { return sig.empty; }
     }
   });
 
@@ -78,14 +81,60 @@ Signal.constant = function(value) {
 };
 
 Signal.combine = function(signals) {
-  var cell = Cell({});
-  _.forEach(signals, function(signal, name) {
-    signal.bind(function(value) {
-      cell.update(function(values) {
-        return _.assign({}, values, _.object([[name, value]]));
+  var cell;
+
+  if (signals instanceof Array) {
+
+    cell = Cell([]);
+
+    _.forEach(signals, function(signal, index) {
+      signal.bind(function(value) {
+
+        cell.update(function(values) {
+          var xs = values ? values.slice() : [];
+          xs[index] = value;
+          return xs;
+        });
+
       });
     });
-  });
+  }
+  else {
+
+    cell = Cell({});
+
+    _.forEach(signals, function(signal, name) {
+      signal.bind(function(value) {
+
+        cell.update(function(values) {
+          return _.assign({}, values, _.object([[name, value]]));
+        });
+
+      });
+    });
+  }
+  return cell.signal;
+};
+
+Signal.join = function(signals) {
+  var cell = Cell();
+
+  if (signals instanceof Array) {
+    _.forEach(signals, function(signal) {
+      signal.bind(function() {
+        if (!_.any(signals, 'empty'))
+          cell.set(_.map(signals, 'value'));
+      });
+    });
+  }
+  else {
+    _.forEach(signals, function(signal) {
+      signal.bind(function() {
+        if (!_.any(signals, 'empty'))
+          cell.set(_.mapValues(signals, 'value'));
+      });
+    });
+  }
   return cell.signal;
 };
 

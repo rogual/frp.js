@@ -73,6 +73,12 @@ Concepts
                 Returns a new event which, whenever any of the given
                 events fires a value, fires that value.
 
+            Event.join(eventsArray)
+
+                Returns a new event which, once all of the given events
+                fire a value, fires all values as an array.
+
+
         The following constant events exist:
 
             Event.identity
