@@ -36,6 +36,23 @@ suite('event', function() {
 
   });
 
+  test('concise unwatch', function() {
+    var ctrl = Pipe();
+    var fire = ctrl.fire;
+
+    var a = [];
+    var cb = a.push.bind(a);
+
+    var unwatch = ctrl.event.watch(cb);
+    fire(1); fire(2);
+    unwatch();
+    fire(3); fire(4);
+    ctrl.event.watch(cb);
+    fire(5); fire(6);
+
+    assert.deepEqual(a, [1, 2, 5, 6]);
+  });
+
   test('combine', function() {
     var ctrl1 = Pipe();
     var ctrl2 = Pipe();

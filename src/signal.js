@@ -30,7 +30,7 @@ Signal.event = function() {
     bind: function(cb) {
       if (!empty)
         cb(value);
-      event.watch(cb);
+      return event.watch(cb);
     },
     unbind: event.unbind,
     event: event

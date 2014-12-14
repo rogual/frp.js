@@ -13,9 +13,13 @@ var Pipe = Event.pipe = function() {
   var Event = require('./Event');
   var watchers = [];
 
-  var watch = watchers.push.bind(watchers);
   var unwatch = function(cb) {
     _.pull(watchers, cb);
+  };
+
+  var watch = function(cb) {
+    watchers.push(cb);
+    return _.partial(unwatch, cb);
   };
 
   var event = Event(watch, unwatch);

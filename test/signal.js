@@ -65,6 +65,19 @@ suite('signal', function() {
     assert.deepEqual(values, [43]);
   });
 
+  test('concise unwatch', function() {
+    var cell = Signal.cell(42);
+    var sig = cell.signal;
+    var values = [];
+
+    var cb = values.push.bind(values);
+    var unwatch = sig.watch(cb);
+    cell.set(43);
+    unwatch();
+    cell.set(44);
+    assert.deepEqual(values, [43]);
+  });
+
   test('bind', function() {
     var sig = Signal.constant(42);
     var values = [];
@@ -84,6 +97,20 @@ suite('signal', function() {
     cell.set(44);
     assert.deepEqual(values, [42, 43]);
   });
+
+  test('concise unbind', function() {
+    var cell = Signal.cell(42);
+    var sig = cell.signal;
+    var values = [];
+
+    var cb = values.push.bind(values);
+    var unbind = sig.bind(cb);
+    cell.set(43);
+    unbind();
+    cell.set(44);
+    assert.deepEqual(values, [42, 43]);
+  });
+  
 
   test('combine-object', function() {
     var a = Cell(1);
