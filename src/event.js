@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var assert = require('assert');
 
 var Event = module.exports = function(watch, unwatch) {
   return _.assign({
@@ -19,12 +20,12 @@ var Pipe = Event.pipe = function() {
 
   var watch = function(cb) {
     watchers.push(cb);
-    return _.partial(unwatch, cb);
+    return _.partial(r.unwatch, cb);
   };
 
   var event = Event(watch, unwatch);
 
-  return _.assign({}, event, {
+  var r = _.assign({}, event, {
     fire: function(value) {
       watchers.forEach(function(watcher) {
         watcher(value);
@@ -34,8 +35,11 @@ var Pipe = Event.pipe = function() {
     unwatch: unwatch,
     bind: watch,
     unbind: unwatch,
-    event: event
+    event: event,
+    countWatchers: function() { return watchers.length; }
   });
+
+  return r;
 };
 
 Event.identity = Pipe().event;
@@ -66,9 +70,33 @@ function def(name, impl) {
 def('transform', function(event, xform) {
   var pipe = Pipe();
 
-  xform(pipe.fire);
+  var unbind = xform(pipe.fire);
 
-  return pipe.event;
+  var r = pipe.event;
+
+  var refs = 0;
+
+  function update() {
+    if (refs <= 0 && pipe.countWatchers() === 0) {
+      (unbind || _.noop)();
+    }
+  }
+
+  pipe.unwatch = _.compose(update, pipe.unwatch);
+  pipe.unbind = _.compose(update, pipe.unbind);
+
+  r.free = function() {
+    refs -= 1;
+    update();
+    return r;
+  };
+
+  r.retain = function() {
+    refs += 1;
+    return r;
+  };
+
+  return r;
 });
 
 def('flatMap', function(event, fn) {
