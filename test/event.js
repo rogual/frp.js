@@ -16,6 +16,23 @@ suite('event', function() {
 
     assert.deepEqual(b, [[1, 2], {}, {a: 'b'}]);
     assert.deepEqual(a, [1, undefined, null, "", "xyz"].concat(b));
+  });
+
+  test('unwatch', function() {
+    var ctrl = Pipe();
+    var fire = ctrl.fire;
+
+    var a = [];
+    var cb = a.push.bind(a);
+
+    ctrl.event.watch(cb);
+    fire(1); fire(2);
+    ctrl.event.unwatch(cb);
+    fire(3); fire(4);
+    ctrl.event.watch(cb);
+    fire(5); fire(6);
+
+    assert.deepEqual(a, [1, 2, 5, 6]);
 
   });
 

@@ -1,16 +1,24 @@
 var _ = require('lodash');
 
-var Event = module.exports = function(watch) {
-  return _.assign({watch: watch, bind: watch}, Event.methods);
+var Event = module.exports = function(watch, unwatch) {
+  return _.assign({
+    watch: watch, 
+    bind: watch,
+    unwatch: unwatch,
+    unbind: unwatch
+  }, Event.methods);
 };
 
 var Pipe = Event.pipe = function() {
   var Event = require('./Event');
   var watchers = [];
 
-  var event = Event(watchers.push.bind(watchers));
-
   var watch = watchers.push.bind(watchers);
+  var unwatch = function(cb) {
+    _.pull(watchers, cb);
+  };
+
+  var event = Event(watch, unwatch);
 
   return _.assign({}, event, {
     fire: function(value) {
@@ -19,7 +27,9 @@ var Pipe = Event.pipe = function() {
       });
     },
     watch: watch,
+    unwatch: unwatch,
     bind: watch,
+    unbind: unwatch,
     event: event
   });
 };

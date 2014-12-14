@@ -40,11 +40,37 @@ suite('signal', function() {
     assert.deepEqual(values, [42]);
   });
 
+  test('unwatch', function() {
+    var cell = Signal.cell(42);
+    var sig = cell.signal;
+    var values = [];
+
+    var cb = values.push.bind(values);
+    sig.watch(cb);
+    cell.set(43);
+    sig.unwatch(cb);
+    cell.set(44);
+    assert.deepEqual(values, [43]);
+  });
+
   test('bind', function() {
     var sig = Signal.constant(42);
     var values = [];
     sig.bind(values.push.bind(values));
     assert.deepEqual(values, [42]);
+  });
+
+  test('unbind', function() {
+    var cell = Signal.cell(42);
+    var sig = cell.signal;
+    var values = [];
+
+    var cb = values.push.bind(values);
+    sig.bind(cb);
+    cell.set(43);
+    sig.unbind(cb);
+    cell.set(44);
+    assert.deepEqual(values, [42, 43]);
   });
 
   test('combine-object', function() {

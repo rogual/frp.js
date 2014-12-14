@@ -25,14 +25,14 @@ Signal.event = function() {
 
   var r = _.assign({
     get: function() { return value; },
-    watch: function(cb) {
-      event.watch(cb);
-    },
+    watch: event.watch,
+    unwatch: event.unwatch,
     bind: function(cb) {
       if (!empty)
         cb(value);
       event.watch(cb);
     },
+    unbind: event.unbind,
     event: event
   }, Signal.methods);
 
