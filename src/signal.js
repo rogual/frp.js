@@ -155,4 +155,15 @@ def('transform', function(event, xform) {
   return cell.signal;
 });
 
+def('initial', function(signal, initial) {
+  var cell = Signal.cell();
+
+  if (signal.empty)
+    cell.set(initial);
+
+  signal.bind(cell.set);
+
+  return cell.signal;
+});
+
 require('./common').init(def);

@@ -15,6 +15,18 @@ suite('signal', function() {
     assert(!Cell('').empty);
   });
 
+  test('initial', function() {
+    var cell = Cell();
+    var sig = cell.signal.initial(136);
+
+    var values = [];
+    sig.bind(values.push.bind(values));
+    cell.set(1);
+    cell.set(2);
+
+    assert.deepEqual(values, [136, 1, 2]);
+  });
+
   test('constant', function() {
     var sig = Signal.constant(42);
     assert.equal(sig.get(), 42);

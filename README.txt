@@ -210,3 +210,10 @@ Concepts
                 When the new signal is created from a signal with value
                 x, the new signal will have value x if fn(x) is truthy;
                 otherwise, it will be empty.
+
+            initial(signal, value)
+            signal.initial(value)
+
+                Returns a new signal whose value will be the given value when
+                the given signal is empty, and the given signal's value
+                otherwise.

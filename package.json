@@ -1,6 +1,6 @@
 {
   "name": "frp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Functional reactive programming primitives",
   "author": "Robin Allen <r@foon.uk>",
   "license": "ISC",
