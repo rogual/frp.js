@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var assert = require('assert');
 var Event = require('../src/event');
 var Pipe = require('../src/pipe');
@@ -195,66 +194,6 @@ suite('event', function() {
     ctrl.fire(2);
     assert.deepEqual(r, [1, 2]);
     assert.deepEqual(s, [1, 1, 2]);
-  });
-
-  test('free', function() {
-    var ctrl = Pipe();
-
-    assert.equal(ctrl.countWatchers(), 0);
-
-    var e2 = ctrl.event.map(function(x) { return x + 1; });
-
-    assert.equal(ctrl.countWatchers(), 1);
-
-    e2.free();
-
-    assert.equal(ctrl.countWatchers(), 0);
-  });
-
-  test('free & unwatch', function() {
-    var ctrl = Pipe();
-    var e0 = ctrl.event;
-
-    var e1 = e0.map(_.identity);
-
-    var unwatch = e1.watch(_.noop);
-
-    assert.equal(ctrl.countWatchers(), 1);
-
-    unwatch();
-    assert.equal(ctrl.countWatchers(), 0);
-
-  });
-
-  test('free & unwatch chain', function() {
-    var ctrl = Pipe();
-    var e0 = ctrl.event;
-
-    var e1 = e0.map(_.identity);
-    var e2 = e1.map(_.identity);
-
-    var unwatch = e2.watch(_.noop);
-
-    assert.equal(ctrl.countWatchers(), 1);
-
-    unwatch();
-    assert.equal(ctrl.countWatchers(), 0);
-  });
-
-  test('retain', function() {
-    var ctrl = Pipe();
-    var e0 = ctrl.event;
-
-    var e1 = e0.map(_.identity).retain();
-
-    var unwatch = e1.watch(_.noop);
-
-    assert.equal(ctrl.countWatchers(), 1);
-    unwatch();
-    assert.equal(ctrl.countWatchers(), 1);
-
-    e1.free();
-    assert.equal(ctrl.countWatchers(), 0);
   });
 
 });
