@@ -196,4 +196,21 @@ suite('event', function() {
     assert.deepEqual(s, [1, 1, 2]);
   });
 
+  test('ref', function() {
+    var ctrl = Pipe();
+    var e = ctrl.event;
+
+    var r = e.ref();
+
+    var xs = [];
+    r.map(function(x) { return x + 100; }).watch(xs.push.bind(xs));
+
+    ctrl.fire(1);
+    ctrl.fire(2);
+    r.release();
+    ctrl.fire(3);
+
+    assert.deepEqual(xs, [101, 102]);
+  });
+
 });

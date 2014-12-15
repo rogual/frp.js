@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var Event = module.exports = function(watch, unwatch) {
   return _.assign({
-    watch: watch, 
+    watch: watch,
     bind: watch,
     unwatch: unwatch,
     unbind: unwatch
@@ -62,6 +62,13 @@ function def(name, impl) {
     return impl.apply(null, [this].concat(_.toArray(arguments)));
   };
 }
+
+def('ref', function(event) {
+  var pipe = Pipe();
+  var unbind = event.bind(pipe.fire);
+
+  return _.assign(pipe.event, {release: unbind});
+});
 
 def('transform', function(event, xform) {
   var pipe = Pipe();

@@ -147,6 +147,14 @@ function def(name, impl) {
   };
 }
 
+def('ref', function(sig) {
+  var cell = Signal.cell();
+
+  var unbind = sig.bind(cell.set);
+
+  return _.assign(cell.signal, {release: unbind});
+});
+
 def('transform', function(event, xform) {
   var cell = Signal.cell();
 
