@@ -201,8 +201,8 @@ values before starting to emit values.
 
 ### Functions on Signal
 
-Signals support all the functions that events do, with the exception of
-`flatMap`. Signals also offer the following functions:
+Signals support all the functions that events do, and also offer the following
+functions:
 
 <h4><pre>
 initial(signal, value)

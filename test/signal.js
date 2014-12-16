@@ -236,4 +236,37 @@ suite('signal', function() {
     assert.deepEqual(s, [1, 1, 2]);
   });
 
+  test('flatMap', function() {
+    var a = Signal.cell();
+    var b = Signal.cell();
+
+    var q = Signal.cell();
+
+    var fn = function(x) {
+      return {a: a, b: b}[x];
+    };
+
+    var xs = [];
+    var r = q.flatMap(fn).bind(
+      xs.push.bind(xs)
+    );
+
+    q.set('a');
+    a.set(1);
+    b.set(10);
+    a.set(2);
+    b.set(20);
+    q.set('b');
+    a.set(1);
+    b.set(10);
+    a.set(2);
+    b.set(20);
+    q.set('a');
+
+    assert.deepEqual(xs, [
+      1, 2, 20, 10, 20, 2
+    ]);
+
+  });
+
 });
