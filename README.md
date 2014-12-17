@@ -89,8 +89,8 @@ Returns a new event which, when the original event fires a value, fires
 
 
 <h4><pre>
-reduce(event, fn)
-event.reduce(fn)
+reduce(event, initial, fn)
+event.reduce(initial, fn)
 </pre></h4>
 
 Returns a new event which keeps an internal value, initialized to the given
@@ -103,9 +103,15 @@ flatMap(event, fn)
 event.flatMap(fn)
 </pre></h4>
 
-Returns a new event which, when the original event fires a value, calls
-fn(value), interprets the result as an event, and when that event fires a value,
-fires the value.
+Returns a new event which has an internal event.
+
+Whenever the original event fires a value, the internal event is set to
+`fn(value)`, which must always be an event.
+
+Any values fired by the current internal event are fired by the returned event.
+
+When the internal event changes (i.e. when the original event fires a new
+value), values fired by the old internal event are ignored.
 
 
 <h4><pre>

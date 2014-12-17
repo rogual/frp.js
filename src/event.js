@@ -78,14 +78,4 @@ def('transform', function(event, xform) {
   return pipe.event;
 });
 
-def('flatMap', function(event, fn) {
-  var pipe = Pipe();
-  fn = _.createCallback(fn);
-
-  event.watch(function(value) {
-    fn(value).watch(pipe.fire);
-  });
-  return pipe.event;
-});
-
 require('./common').init(def);

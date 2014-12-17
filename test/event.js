@@ -172,8 +172,11 @@ suite('event', function() {
     b.fire(2);
     assert.deepEqual(r, [1, 2]);
     a.fire(3);
-    assert.deepEqual(r, [1, 2, 3]);
-
+    assert.deepEqual(r, [1, 2]);
+    ctrl.fire('a');
+    a.fire(4);
+    b.fire(5);
+    assert.deepEqual(r, [1, 2, 4]);
   });
 
   test('unique', function() {

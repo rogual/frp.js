@@ -174,24 +174,4 @@ def('initial', function(signal, initial) {
   return cell.signal;
 });
 
-def('flatMap', function(signal, fn) {
-
-  var inner;
-  var r = Signal.cell();
-
-  signal.bind(function(w) {
-
-    var x = fn(w);
-
-    if (inner)
-      inner.unbind(r.set);
-
-    inner = x;
-
-    inner.bind(r.set);
-  });
-
-  return r.signal;
-});
-
 require('./common').init(def);
