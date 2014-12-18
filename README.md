@@ -99,22 +99,6 @@ update its internal value to `fn(oldInternal, x)` and fire that value.
 
 
 <h4><pre>
-flatMap(event, fn)
-event.flatMap(fn)
-</pre></h4>
-
-Returns a new event which has an internal event.
-
-Whenever the original event fires a value, the internal event is set to
-`fn(value)`, which must always be an event.
-
-Any values fired by the current internal event are fired by the returned event.
-
-When the internal event changes (i.e. when the original event fires a new
-value), values fired by the old internal event are ignored.
-
-
-<h4><pre>
 ref(event)
 event.ref()
 </pre></h4>
@@ -218,6 +202,28 @@ signal.initial(value)
 If the given signal has a value, returns the given signal. Otherwise, returns
 a signal which has the given value, and which starts to track the given signal’s
 value as soon as it has one.
+
+
+<h4><pre>
+flatten(signal)
+signal.flatten()
+</pre></h4>
+
+The argument should be a signal whose value is always another signal.
+
+Returns a new signal whose value is always the value of the signal that is the
+value of the given signal.
+
+If the given signal ever takes on a value which is not a signal, undefined
+behaviour ensues.
+
+
+<h4><pre>
+flatMap(signal, fn)
+signal.flatMap(fn)
+</pre></h4>
+
+Equivalent to `signal.map(fn).flatten()`
 
 
 # Lifetime Management

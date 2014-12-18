@@ -56,24 +56,6 @@ def('debounce', function(functor, msec) {
   });
 });
 
-def('flatMap', function(functor, fn) {
-  return functor.transform(function(emit) {
-    var inner;
-
-    functor.bind(function(w) {
-
-      var x = fn(w);
-
-      if (inner)
-        inner.unbind(emit);
-
-      inner = x;
-
-      inner.bind(emit);
-    });
-  });
-});
-
 exports.init = function(def) {
   _.forEach(methods, function(impl, name) {
     def(name, impl);

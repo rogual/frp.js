@@ -174,4 +174,26 @@ def('initial', function(signal, initial) {
   return cell.signal;
 });
 
+def('flatMap', function(signal, fn) {
+  return signal.transform(function(emit) {
+    var inner;
+
+    signal.bind(function(w) {
+
+      var x = fn(w);
+
+      if (inner)
+        inner.unbind(emit);
+
+      inner = x;
+
+      inner.bind(emit);
+    });
+  });
+});
+
+def('flatten', function(signal) {
+  return signal.flatMap(_.identity);
+});
+
 require('./common').init(def);

@@ -151,34 +151,6 @@ suite('event', function() {
     });
   });
 
-  test('flatMap', function() {
-    var ctrl = Pipe();
-
-    var a = Pipe(), b = Pipe();
-    var things = {a: a, b: b};
-
-    var r = [];
-    ctrl.flatMap(function(name) {
-      return things[name].event;
-    }).watch(r.push.bind(r));
-
-    assert.deepEqual(r, []);
-    ctrl.fire('a');
-    assert.deepEqual(r, []);
-    a.fire(1);
-    assert.deepEqual(r, [1]);
-    ctrl.fire('b');
-    assert.deepEqual(r, [1]);
-    b.fire(2);
-    assert.deepEqual(r, [1, 2]);
-    a.fire(3);
-    assert.deepEqual(r, [1, 2]);
-    ctrl.fire('a');
-    a.fire(4);
-    b.fire(5);
-    assert.deepEqual(r, [1, 2, 4]);
-  });
-
   test('unique', function() {
     var ctrl = Pipe();
     var u = ctrl.unique();
