@@ -84,13 +84,21 @@ Returns a new event which, when the original event fires a value, fires
 
 
 <h4><pre>
-reduce(event, initial, fn)
-event.reduce(initial, fn)
+fold(event, initial, fn)
+event.fold(initial, fn)
 </pre></h4>
 
 Returns a new event which keeps an internal value, initialized to the given
 initial value. When the given event fires a value `x`, the returned event will
 update its internal value to `fn(oldInternal, x)` and fire that value.
+
+
+<h4><pre>
+reduce(event, fn)
+event.reduce(fn)
+</pre></h4>
+
+Waits for the event to fire a value `x`, then behaves as `event.fold(x, fn)`.
 
 
 <h4><pre>
@@ -186,8 +194,11 @@ values before starting to emit values.
 
 ### Functions on Signal
 
-Signals support all the functions that events do, and also offer the following
-functions:
+Signals support all the functions that events do. See the unit tests for details
+on how these differ from their counterparts on event.
+
+Signals also offer the following functions:
+
 
 <h4><pre>
 initial(signal, value)

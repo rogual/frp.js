@@ -16,12 +16,27 @@ def('map', function(functor, fn) {
   });
 });
 
-def('reduce', function(functor, initial, fn) {
+def('fold', function(functor, initial, fn) {
   return functor.transform(function(emit) {
     var value = initial;
     functor.bind(function(newValue) {
       value = fn(value, newValue);
       emit(value);
+    });
+  });
+});
+
+def('reduce', function(functor, fn) {
+  return functor.transform(function(emit) {
+    var last = [];
+    functor.bind(function(newValue) {
+      if (last.length) {
+        var value = last[0] = fn(last[0], newValue);
+        emit(value);
+      }
+      else {
+        last[0] = newValue;
+      }
     });
   });
 });

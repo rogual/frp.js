@@ -124,7 +124,7 @@ suite('event', function() {
     assert.deepEqual(r, [{name: 'Bruce', alignment: 'good'}]);
   });
 
-  test('reduce', function() {
+  test('fold', function() {
     var ctrl = Pipe();
     var event = ctrl.event;
 
@@ -132,8 +132,8 @@ suite('event', function() {
     var op = function(a, b) { return a + b; };
 
     var items = [
-      function() { return event.reduce(initial, op); },
-      function() { return Event.reduce(event, initial, op); }
+      function() { return event.fold(initial, op); },
+      function() { return Event.fold(event, initial, op); }
     ];
 
     items.forEach(function(getOut) {
@@ -149,6 +149,25 @@ suite('event', function() {
 
       assert.deepEqual(values, [1500, 1530, 1537]);
     });
+  });
+
+  test('reduce', function() {
+    var ctrl = Pipe();
+    var sig = ctrl.event;
+
+    var out = sig.reduce(function(a, b) { return a + b; });
+
+    var values = [];
+    out.watch(values.push.bind(values));
+
+    ctrl.fire(500);
+    assert.deepEqual(values, []);
+
+    ctrl.fire(30);
+    assert.deepEqual(values, [530]);
+
+    ctrl.fire(7);
+    assert.deepEqual(values, [530, 537]);
   });
 
   test('unique', function() {

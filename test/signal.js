@@ -181,11 +181,11 @@ suite('signal', function() {
 
   });
 
-  test('reduce', function() {
+  test('fold', function() {
     var ctrl = Pipe();
     var sig = Signal.event(1000, ctrl.event);
 
-    var out = sig.reduce(0, function(a, b) { return a + b; });
+    var out = sig.fold(0, function(a, b) { return a + b; });
 
     assert.equal(out.get(), 1000);
 
@@ -194,6 +194,24 @@ suite('signal', function() {
     ctrl.fire(7);
 
     assert.equal(out.get(), 1537);
+  });
+
+  test('reduce', function() {
+    var ctrl = Cell();
+    var sig = ctrl.signal;
+
+    var out = sig.reduce(function(a, b) { return a + b; });
+
+    assert(out.empty);
+
+    ctrl.set(500);
+    assert(out.empty);
+
+    ctrl.set(30);
+    assert.equal(out.get(), 530);
+
+    ctrl.set(7);
+    assert.equal(out.get(), 537);
   });
 
   test('filter', function() {
