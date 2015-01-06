@@ -110,7 +110,6 @@ suite('signal', function() {
     cell.set(44);
     assert.deepEqual(values, [42, 43]);
   });
-  
 
   test('combine-object', function() {
     var a = Cell(1);
@@ -309,4 +308,55 @@ suite('signal', function() {
 
   });
 
+  test('sum (initially empty)', function() {
+    var a = Signal.cell();
+    var q = a.sum();
+
+    assert.equal(q.value, 0);
+    a.set(1);
+    assert.equal(q.value, 1);
+    a.set(2);
+    assert.equal(q.value, 3);
+    a.set(4);
+    assert.equal(q.value, 7);
+  });
+
+  test('sum (initially non-empty)', function() {
+    var a = Signal.cell(8);
+    var q = a.sum();
+
+    assert.equal(q.value, 8);
+    a.set(1);
+    assert.equal(q.value, 9);
+    a.set(2);
+    assert.equal(q.value, 11);
+    a.set(4);
+    assert.equal(q.value, 15);
+  });
+
+  test('product (initially empty)', function() {
+    var a = Signal.cell();
+    var q = a.product();
+
+    assert.equal(q.value, 1);
+    a.set(1);
+    assert.equal(q.value, 1);
+    a.set(2);
+    assert.equal(q.value, 2);
+    a.set(4);
+    assert.equal(q.value, 8);
+  });
+
+  test('product (initially non-empty)', function() {
+    var a = Signal.cell(8);
+    var q = a.product();
+
+    assert.equal(q.value, 8);
+    a.set(1);
+    assert.equal(q.value, 8);
+    a.set(2);
+    assert.equal(q.value, 16);
+    a.set(4);
+    assert.equal(q.value, 64);
+  });
 });

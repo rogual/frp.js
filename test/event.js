@@ -207,4 +207,33 @@ suite('event', function() {
     assert.deepEqual(xs, [101, 102]);
   });
 
+  test('sum', function() {
+    var a = Pipe();
+    var q = a.sum();
+
+    var r = [];
+    q.map(r.push.bind(r));
+
+    a.fire(1);
+    a.fire(2);
+    a.fire(4);
+
+    assert.deepEqual(r, [1, 3, 7]);
+  });
+
+  test('product', function() {
+    var a = Pipe();
+    var q = a.product();
+
+    var r = [];
+    q.map(r.push.bind(r));
+
+    a.fire(1);
+    a.fire(2);
+    a.fire(4);
+
+    assert.deepEqual(r, [1, 2, 8]);
+  });
+  
+
 });

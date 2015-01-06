@@ -71,4 +71,14 @@ def('transform', function(event, xform) {
   return pipe.event;
 });
 
+def('fold', function(event, initial, fn) {
+  return event.transform(function(emit) {
+    var value = initial;
+    event.watch(function(newValue) {
+      value = fn(value, newValue);
+      emit(value);
+    });
+  });
+});
+
 require('./common').init(def);

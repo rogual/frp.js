@@ -111,6 +111,22 @@ has a `release` function. When called, this breaks the link between the original
 event and the returned event.
 
 
+<h4><pre>
+sum(event)
+event.sum()
+</pre></h4>
+
+Equivalent to `event.fold(0, add)`
+
+
+<h4><pre>
+product(event)
+event.product()
+</pre></h4>
+
+Equivalent to `event.fold(1, multiply)`
+
+
 ## Signal
 
     require('frp/signal')

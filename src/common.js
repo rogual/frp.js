@@ -16,15 +16,6 @@ def('map', function(functor, fn) {
   });
 });
 
-def('fold', function(functor, initial, fn) {
-  return functor.transform(function(emit) {
-    var value = initial;
-    functor.bind(function(newValue) {
-      value = fn(value, newValue);
-      emit(value);
-    });
-  });
-});
 
 def('reduce', function(functor, fn) {
   return functor.transform(function(emit) {
@@ -69,6 +60,14 @@ def('debounce', function(functor, msec) {
   return functor.transform(function(emit) {
     functor.bind(_.debounce(emit, msec));
   });
+});
+
+def('sum', function(functor) {
+  return functor.fold(0, function(a, b) { return a + b; });
+});
+
+def('product', function(functor) {
+  return functor.fold(1, function(a, b) { return a * b; });
 });
 
 exports.init = function(def) {

@@ -192,6 +192,18 @@ def('flatMap', function(signal, fn) {
   });
 });
 
+def('fold', function(signal, initial, fn) {
+  return signal.transform(function(emit) {
+    var value = initial;
+    if (signal.empty)
+      emit(value);
+    signal.bind(function(newValue) {
+      value = fn(value, newValue);
+      emit(value);
+    });
+  });
+});
+
 def('flatten', function(signal) {
   return signal.flatMap(_.identity);
 });
