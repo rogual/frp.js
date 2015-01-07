@@ -10,7 +10,6 @@ var Event = module.exports = function(watch, unwatch) {
 };
 
 var Pipe = Event.pipe = function() {
-  var Event = require('./Event');
   var watchers = [];
 
   var unwatch = function(cb) {
