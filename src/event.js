@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var error = require( './error' );
 
 var Event = module.exports = function(watch, unwatch, catchFunc, uncatch) {
   return _.assign({
@@ -37,7 +38,7 @@ var Pipe = Event.pipe = function() {
 
   return _.assign({}, event, {
     fire: function(value) {
-      if(_.isObject(value) && value.isError) {
+      if( error.isError(value) ) {
         catchers.forEach(function(catcher) {
           catcher(value);
         });
