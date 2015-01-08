@@ -107,6 +107,49 @@ Returns a new event which behaves identically to the given event, but which also
 has a `release` function. When called, this breaks the link between the original
 event and the returned event.
 
+### Error Handling
+
+#### `frp.error(message)`
+
+There are times when an Event will not return a value but rather an error message should
+be sent.
+
+For this reason `frp.error` was created. `frp.error` will not return a standard
+Javascript `Error` but simple an `Object` with an error message. This allows for an `frp.event`
+to fire regular Javascript errors also.
+
+In the same way you can `watch` and `bind` an event you can watch for error messages using
+the `catch` function or method:
+
+<h4><pre>
+catch(event, fn)
+event.catch(fn)
+</pre></h4>
+
+Example:
+```javascript
+var pipe = frp.event.pipe();
+
+pipe
+.watch(function(value) {
+    console.log(value); // will log 'Will go into watch'
+})
+.catch(function(error) {
+    console.log(error.message); // will log ''
+});
+
+pipe.fire('Will go into watch');
+pipe.fire(frp.error('Will go into catch'));
+```
+
+In the same way you can `unwatch` a `watch` you can `uncatch` a `catch`.
+
+<h4><pre>
+uncatch(event, fn)
+event.uncatch(fn)
+</pre></h4>
+
+
 
 ## Signal
 
