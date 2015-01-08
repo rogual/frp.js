@@ -21,7 +21,13 @@ Signal.event = function() {
 
   var value = initial;
 
-  event.watch(function(newValue) { value = newValue; empty = false; });
+  event.watch(function(newValue) { 
+
+    if(!_.isObject(newValue) || !newValue.isError) {
+      value = newValue; 
+      empty = false; 
+    }
+  });
 
   var r = _.assign({
     get: function() { return value; },

@@ -1,4 +1,5 @@
 var assert = require('assert');
+var frp = require('./..');
 var Event = require('../src/event');
 var Pipe = require('../src/pipe');
 
@@ -34,6 +35,21 @@ suite('event', function() {
 
     assert.deepEqual(a, [1, 2, 5, 6]);
 
+  });
+
+  test('catch', function() {
+    var ctrl = Pipe();
+    var fire = ctrl.fire;
+
+    ctrl.event.watch(function(value) {
+      assert(!value.isError, 'An error was sent to watch');
+    });
+
+    ctrl.event.catch(function(error) {
+      assert(error.isError, 'Didn\'t receive an error');
+    });
+
+    fire(frp.error('should not be received by watch'));    
   });
 
   test('concise unwatch', function() {

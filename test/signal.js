@@ -1,4 +1,5 @@
 var assert = require('assert');
+var frp = require('./..');
 var Event = require('../src/event');
 var Signal = require('../src/signal');
 var Pipe = require('../src/pipe');
@@ -63,6 +64,14 @@ suite('signal', function() {
     sig.unwatch(cb);
     cell.set(44);
     assert.deepEqual(values, [43]);
+  });
+
+  test('catch', function() {
+    var cell = Signal.cell(42);
+
+    cell.set(frp.error('Uh uh dont set me'));
+
+    assert(cell.value,42,'Received error');
   });
 
   test('concise unwatch', function() {
