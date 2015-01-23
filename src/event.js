@@ -39,12 +39,6 @@ var Pipe = Event.pipe = function() {
 
 Event.identity = Pipe().event;
 
-Event.dom = function(element, eventName) {
-  var pipe = Pipe();
-  element.addEventListener(eventName, pipe.fire);
-  return pipe.event;
-};
-
 Event.combine = function(events) {
   var pipe = Pipe();
   events.forEach(function(event) {

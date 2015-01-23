@@ -55,11 +55,6 @@ A useful pattern is to create a pipe, keep a reference to it, and return
 pipe.event to your caller so that other code can listen to the event, but not
 cause it to fire.
 
-#### `frp.event.dom(element, eventName)`
-
-Return an event that listens for the specified DOM event and fires the DOM
-`Event` object.
-
 
 ### Combining Events
 
