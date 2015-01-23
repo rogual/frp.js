@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var Event = require('./event');
+var error = require( './error' );
 
 var Signal = module.exports = {};
 
@@ -21,7 +22,13 @@ Signal.event = function() {
 
   var value = initial;
 
-  event.watch(function(newValue) { value = newValue; empty = false; });
+  event.watch(function(newValue) { 
+
+    if(!error.isError(newValue)) {
+      value = newValue; 
+      empty = false; 
+    }
+  });
 
   var r = _.assign({
     get: function() { return value; },

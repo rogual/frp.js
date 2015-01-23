@@ -1,16 +1,20 @@
 var _ = require('lodash');
+var error = require( './error' );
 
-var Event = module.exports = function(watch, unwatch) {
+var Event = module.exports = function(watch, unwatch, catchFunc, uncatch) {
   return _.assign({
     watch: watch,
     bind: watch,
+    catch: catchFunc,
     unwatch: unwatch,
-    unbind: unwatch
+    unbind: unwatch,
+    uncatch: uncatch
   }, Event.methods);
 };
 
 var Pipe = Event.pipe = function() {
-  var watchers = [];
+  var watchers = [],
+      catchers = [];
 
   var unwatch = function(cb) {
     _.pull(watchers, cb);
@@ -21,16 +25,33 @@ var Pipe = Event.pipe = function() {
     return _.partial(unwatch, cb);
   };
 
-  var event = Event(watch, unwatch);
+  var uncatch = function(cb) {
+    _.pull(catchers, cb);
+  };
+
+  var catchFunc = function(cb) {
+    catchers.push(cb);
+    return _.partial(uncatch, cb);
+  };
+
+  var event = Event(watch, unwatch, catchFunc, uncatch);
 
   return _.assign({}, event, {
     fire: function(value) {
-      watchers.forEach(function(watcher) {
-        watcher(value);
-      });
+      if( error.isError(value) ) {
+        catchers.forEach(function(catcher) {
+          catcher(value);
+        });
+      } else {
+        watchers.forEach(function(watcher) {
+          watcher(value);
+        });
+      }
     },
     watch: watch,
     unwatch: unwatch,
+    catch: catchFunc,
+    uncatch: uncatch,
     bind: watch,
     unbind: unwatch,
     event: event
