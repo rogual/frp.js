@@ -302,3 +302,19 @@ But, since `a0` and `a1` are created using `a.ref`, calling `release` causes
 them to disconnect from `a` and become unreachable. `a`’s list of watchers will
 be empty again after both `a0` and `a1` are released, and `a0` and `a1` can
 be garbage-collected.
+
+
+# Error Handling
+
+This library does not take a stance on error handling. Events and Signals
+concern themselves only with values, and the question of which values are
+considered ‘errors’ is left up to you and your application.
+
+Exceptions are not afforded any particular special handling; exceptions
+thrown by your code are not caught by `frp.js` and so will propagate up
+the stack as normal.
+
+In general, this means that if an exception is thrown in the transformation
+function given to `map` or `filter` or similar, this will propagate up
+to where you called `set` or `fire`, and the transformed event or signal
+(the return value of `map` or similar) will not fire a value.

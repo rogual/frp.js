@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var assert = require('assert');
 var Event = require('../src/event');
 var Signal = require('../src/signal');
@@ -358,5 +359,31 @@ suite('signal', function() {
     assert.equal(q.value, 16);
     a.set(4);
     assert.equal(q.value, 64);
+  });
+
+  test('exceptions', function() {
+    var a = Signal.cell();
+    var b = a.map(_.identity).map(function(x) {
+      if (x == 6)
+        throw new Error("I hate this number!");
+      return x;
+    }).map(_.identity);
+
+    var r = [];
+    b.watch(r.push.bind(r));
+
+    assert.throws(
+      function() {
+        _.range(10).forEach(a.set);
+      },
+      /I hate this number!/
+    );
+
+    assert.deepEqual(r, [0, 1, 2, 3, 4, 5]);
+
+    a.set(7);
+
+    assert.deepEqual(r, [0, 1, 2, 3, 4, 5, 7]);
+
   });
 });
