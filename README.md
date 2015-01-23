@@ -1,4 +1,4 @@
-# frp.js 0.2
+# frp.js 0.3
 
 This is a library providing functional reactive programming (FRP) primitives and
 operations.
