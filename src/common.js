@@ -17,6 +17,25 @@ def('map', function(functor, fn) {
 });
 
 
+def('sync', function(functor, gate) {
+  return functor.transform(function(emit) {
+
+    var queue = [];
+
+    functor.bind(function(x) {
+      queue.push(x);
+    });
+
+    gate.watch(function() {
+      var vals = queue;
+      queue = [];
+      vals.forEach(emit);
+    });
+
+  });
+});
+
+
 def('reduce', function(functor, fn) {
   return functor.transform(function(emit) {
     var last = [];

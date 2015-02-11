@@ -234,6 +234,38 @@ suite('event', function() {
 
     assert.deepEqual(r, [1, 2, 8]);
   });
-  
+
+  test('sync', function() {
+    var a = Pipe();
+    var b = Pipe();
+    var q = a.sync(b);
+
+    var r = [];
+    q.watch(r.push.bind(r));
+
+    a.fire(1);
+    a.fire(2);
+    a.fire(3);
+
+    assert.deepEqual(r, []);
+
+    b.fire('spoons');
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    b.fire('knives');
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    a.fire(4);
+    a.fire(5);
+    a.fire(6);
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    b.fire('forks');
+
+    assert.deepEqual(r, [1, 2, 3, 4, 5, 6]);
+  });
 
 });

@@ -386,4 +386,39 @@ suite('signal', function() {
     assert.deepEqual(r, [0, 1, 2, 3, 4, 5, 7]);
 
   });
+
+  test('sync', function() {
+    var a = Signal.cell();
+    var b = Pipe();
+    var q = a.sync(b);
+
+    var r = [];
+    q.bind(r.push.bind(r));
+
+    assert.deepEqual(r, []);
+
+    a.value = 1;
+    a.value = 2;
+    a.value = 3;
+
+    assert.deepEqual(r, []);
+
+    b.fire('spoons');
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    b.fire('knives');
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    a.value = 4;
+    a.value = 5;
+    a.value = 6;
+
+    assert.deepEqual(r, [1, 2, 3]);
+
+    b.fire('forks');
+
+    assert.deepEqual(r, [1, 2, 3, 4, 5, 6]);
+  });
 });

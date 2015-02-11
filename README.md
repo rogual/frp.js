@@ -127,6 +127,16 @@ event.product()
 Equivalent to `event.fold(1, multiply)`
 
 
+<h4><pre>
+sync(eventA, eventB)
+eventA.sync(eventB)
+</pre></h4>
+
+Returns a new event which, whenever `eventA` fires, adds the fired value to
+a queue. When `eventB` fires, the returned event fires all values in the
+queue in succession, and the queue is flushed.
+
+
 ## Signal
 
     require('frp/signal')
