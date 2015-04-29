@@ -8,7 +8,7 @@ function def(name, impl) {
 
 def('map', function(functor, fn) {
   return functor.transform(function(emit) {
-    fn = _.createCallback(fn);
+    fn = _.callback(fn);
 
     functor.bind(function(value) {
       emit(fn(value));
@@ -53,7 +53,7 @@ def('reduce', function(functor, fn) {
 
 def('filter', function(functor, fn) {
   return functor.transform(function(emit) {
-    fn = _.createCallback(fn);
+    fn = _.callback(fn);
 
     functor.bind(function(value) {
       if (fn(value))

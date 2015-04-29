@@ -16,6 +16,6 @@
     "test": "mocha --ui tdd"
   },
   "dependencies": {
-    "lodash": "^2.4.1"
+    "lodash": "^3.7.0"
   }
 }

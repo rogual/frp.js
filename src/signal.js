@@ -60,7 +60,7 @@ var Cell = Signal.cell = function(initial) {
   });
 
   r.update = function(fn) {
-    r.value = _.createCallback(fn)(r.value);
+    r.value = _.callback(fn)(r.value);
   };
 
   Object.defineProperties(r, {
