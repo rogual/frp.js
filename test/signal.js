@@ -181,6 +181,26 @@ suite('signal', function() {
 
   });
 
+  test('multimap', function() {
+    var ctrl = Cell();
+
+    var r = [];
+
+    ctrl.multimap(function(value, emit) {
+
+      for (var i=0; i<value.times; i++)
+        emit(value.value);
+
+    }).bind(r.push.bind(r));
+
+    ctrl.set({value: 62, times: 3});
+    ctrl.set({value: 98, times: 0});
+    ctrl.set({value: 14, times: 1});
+
+    assert.deepEqual(r, [62, 62, 62, 14]);
+
+  });
+
   test('fold', function() {
     var ctrl = Pipe();
     var sig = Signal.event(1000, ctrl.event);

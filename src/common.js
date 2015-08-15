@@ -6,16 +6,22 @@ function def(name, impl) {
   methods[name] = impl;
 }
 
-def('map', function(functor, fn) {
+def('multimap', function(functor, fn) {
   return functor.transform(function(emit) {
     fn = _.callback(fn);
 
     functor.bind(function(value) {
-      emit(fn(value));
+      fn(value, emit);
     });
   });
 });
 
+def('map', function(functor, fn) {
+  fn = _.callback(fn);
+  return functor.multimap(function(value, emit) {
+    emit(fn(value));
+  });
+});
 
 def('sync', function(functor, gate) {
   return functor.transform(function(emit) {
@@ -35,54 +41,43 @@ def('sync', function(functor, gate) {
   });
 });
 
-
 def('reduce', function(functor, fn) {
-  return functor.transform(function(emit) {
-    var last = [];
-    functor.bind(function(newValue) {
-      if (last.length) {
-        var value = last[0] = fn(last[0], newValue);
-        emit(value);
-      }
-      else {
-        last[0] = newValue;
-      }
-    });
+  var last = [];
+  return functor.multimap(function(newValue, emit) {
+    if (last.length) {
+      var value = last[0] = fn(last[0], newValue);
+      emit(value);
+    }
+    else {
+      last[0] = newValue;
+    }
   });
 });
 
 def('filter', function(functor, fn) {
-  return functor.transform(function(emit) {
-    fn = _.callback(fn);
-
-    functor.bind(function(value) {
-      if (fn(value))
-        emit(value);
-    });
+  fn = _.callback(fn);
+  return functor.multimap(function(value, emit) {
+    if (fn(value))
+      emit(value);
   });
 });
 
 def('exclude', function(functor, fn) {
-  return functor.transform(function(emit) {
-    fn = _.callback(fn);
-
-    functor.bind(function(value) {
-      if (!fn(value))
-        emit(value);
-    });
+  fn = _.callback(fn);
+  return functor.multimap(function(value, emit) {
+    if (!fn(value))
+      emit(value);
   });
 });
 
 def('unique', function(functor, eq) {
-  return functor.transform(function(emit) {
-    eq = eq || function(a, b) { return a === b; };
-    var last = [];
-    functor.bind(function(value) {
-      if (last.length === 0 || !eq(last[0], value)) {
-        last[0] = value;
-        emit(value);
-      }
-    });
+  eq = eq || function(a, b) { return a === b; };
+  var last = [];
+  return functor.multimap(function(value, emit) {
+    if (last.length === 0 || !eq(last[0], value)) {
+      last[0] = value;
+      emit(value);
+    }
   });
 });
 

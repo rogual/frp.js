@@ -84,6 +84,18 @@ Returns a new event which, when the original event fires a value, fires
 
 
 <h4><pre>
+multimap(event, fn)
+event.multimap(fn)
+</pre></h4>
+
+Returns a new event which, when the original event fires a value, calls `fn(value, emit)`, and fires any values passed to `emit`.
+
+The given `fn` may call `emit` 0, 1, or n times. It may also store `emit` and arrange for it to be called after `fn` returns.
+
+It is guaranteed that, in all calls to `fn`, `emit` will always refer to the same function object.
+
+
+<h4><pre>
 filter(event, fn)
 event.filter(fn)
 </pre></h4>
