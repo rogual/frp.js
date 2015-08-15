@@ -62,6 +62,17 @@ def('filter', function(functor, fn) {
   });
 });
 
+def('exclude', function(functor, fn) {
+  return functor.transform(function(emit) {
+    fn = _.callback(fn);
+
+    functor.bind(function(value) {
+      if (!fn(value))
+        emit(value);
+    });
+  });
+});
+
 def('unique', function(functor, eq) {
   return functor.transform(function(emit) {
     eq = eq || function(a, b) { return a === b; };

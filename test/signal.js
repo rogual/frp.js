@@ -234,6 +234,27 @@ suite('signal', function() {
     assert.equal(evens.get(), 4);
   });
 
+  test('exclude', function() {
+    var cell = Signal.cell(47);
+    var sig = cell.signal;
+
+    var odds = sig.exclude(function(x) { return x % 2 === 0; });
+
+    assert.equal(odds.empty, false);
+    cell.set(1);
+    assert.equal(odds.empty, false);
+    assert.equal(odds.get(), 1);
+    cell.set(2);
+    assert.equal(odds.empty, false);
+    assert.equal(odds.get(), 1);
+    cell.set(3);
+    assert.equal(odds.empty, false);
+    assert.equal(odds.get(), 3);
+    cell.set(4);
+    assert.equal(odds.empty, false);
+    assert.equal(odds.get(), 3);
+  });
+
   test('unique', function() {
     var cell = Signal.cell();
     var u = cell.unique();

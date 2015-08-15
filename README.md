@@ -84,6 +84,26 @@ Returns a new event which, when the original event fires a value, fires
 
 
 <h4><pre>
+filter(event, fn)
+event.filter(fn)
+</pre></h4>
+
+Returns a new event which, when the original event fires a value, fires
+`value` if `fn(value)` is truthy. If not given, `fn` defaults to the identity
+function.
+
+
+<h4><pre>
+exclude(event, fn)
+event.exclude(fn)
+</pre></h4>
+
+Returns a new event which, when the original event fires a value, fires
+`value` if `fn(value)` is falsy. If not given, `fn` defaults to the identity
+function.
+
+
+<h4><pre>
 fold(event, initial, fn)
 event.fold(initial, fn)
 </pre></h4>

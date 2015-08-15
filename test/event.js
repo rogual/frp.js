@@ -124,6 +124,47 @@ suite('event', function() {
     assert.deepEqual(r, [{name: 'Bruce', alignment: 'good'}]);
   });
 
+  test('exclude', function() {
+    var ctrl = Pipe();
+    var event = ctrl.event;
+
+    var odds = event.exclude(function(x) { return x % 2 === 0; });
+
+    var r = [];
+    odds.watch(r.push.bind(r));
+
+    assert.deepEqual(r, []);
+    ctrl.fire(1);
+    assert.deepEqual(r, [1]);
+    ctrl.fire(2);
+    assert.deepEqual(r, [1]);
+    ctrl.fire(3);
+    assert.deepEqual(r, [1, 3]);
+    ctrl.fire(4);
+    assert.deepEqual(r, [1, 3]);
+
+    r = [];
+    var falsy = event.exclude();
+    falsy.watch(r.push.bind(r));
+
+    ctrl.fire(3);
+    assert.deepEqual(r, []);
+    ctrl.fire(0);
+    assert.deepEqual(r, [0]);
+
+    r = [];
+    var notGood = event.exclude({alignment: 'good'});
+    notGood.watch(r.push.bind(r));
+
+    ctrl.fire({name: 'Jenny', alignment: 'evil'});
+    ctrl.fire({name: 'Bruce', alignment: 'good'});
+    ctrl.fire({name: 'Boz', alignment: 'wonky'});
+    assert.deepEqual(r, [
+      {name: 'Jenny', alignment: 'evil'},
+      {name: 'Boz', alignment: 'wonky'}
+    ]);
+  });
+
   test('fold', function() {
     var ctrl = Pipe();
     var event = ctrl.event;
