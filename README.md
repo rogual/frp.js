@@ -116,6 +116,24 @@ function.
 
 
 <h4><pre>
+unique(event)
+event.unique()
+
+unique(event, equals)
+event.unique(equals)
+</pre></h4>
+
+Returns a new event which fires only the unique values fired by the given
+event. A unique value is any value not equal to the previous value fired.
+
+If you pass in `equals`, it should be a two-argument function returning
+`true` if the two values should be considered equal.
+
+If you don't pass in `equals`, JavaScript's object identity operator (`===`)
+will be used.
+
+
+<h4><pre>
 fold(event, initial, fn)
 event.fold(initial, fn)
 </pre></h4>
